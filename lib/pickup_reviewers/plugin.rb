@@ -20,12 +20,15 @@ module Danger
 
     # An attribute that you can read/write from your Dangerfile
     #
-    # @return   [Array<String>]
-    attr_accessor :my_attribute
+    # @return [String]
+    attr_accessor :git_path
 
     def initialize(dangerfile)
       super(dangerfile)
+      @git_path = ENV['GIT_PATH'] || 'git'
     end
+
+    private
 
     def collaborators
       repo_name = github.pr_json[:base][:repo][:full_name]
@@ -34,6 +37,10 @@ module Danger
 
     def update_files
       git.modified_files + git.created_files + git.deleted_files
+    end
+
+    def pickup_authors(file)
+      stdout = system("#{git_path} log -n 10 --format='%an' -- #{file}")
     end
 
   end
