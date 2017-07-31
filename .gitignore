@@ -36,3 +36,6 @@ public/bundle/*
 log/*
 vender/*
 
+# IDEA
+*.iml
+.idea
