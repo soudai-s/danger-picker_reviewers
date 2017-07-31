@@ -38,12 +38,6 @@ Gem::Specification.new do |spec|
   # If you want to work on older builds of ruby
   spec.add_development_dependency 'listen', '3.0.7'
 
-  # This gives you the chance to run a REPL inside your tests
-  # via:
-  #
-  require 'pry'
-  binding.pry
-  #
   # This will stop test execution and let you inspect the results
   spec.add_development_dependency 'pry'
 end

@@ -23,12 +23,13 @@ module Danger
     # @return   [Array<String>]
     attr_accessor :my_attribute
 
-    # A method that you can call from your Dangerfile
-    # @return   [Array<String>]
-    #
-    def warn_on_mondays
-      binding.pry
-      warn 'Trying to merge code on a Monday' if Date.today.wday == 1
+    def initialize(dangerfile)
+      super(dangerfile)
+    end
+
+    def collaborators
+      repo_name = github.pr_json[:base][:repo][:full_name]
+      collaborators = github.api.collaborators(repo_name)
     end
   end
 end
