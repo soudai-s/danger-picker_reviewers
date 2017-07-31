@@ -28,20 +28,42 @@ module Danger
       @git_path = ENV['GIT_PATH'] || 'git'
     end
 
+    def pickup_reviewers
+      cols = collaborators.inject({}) do |hash, collaborator|
+        hash.update(collaborator => 0)
+      end
+
+      update_files.each do |f|
+        pickup_authors(f).each do |author|
+          cols[author] += 1
+        end
+      end
+
+      max = min = cols.keys.first
+      cols.keys.each do |col|
+        max = [cols[col], cols[max]].max
+        min = [cols[col], cols[min]].min
+      end
+
+      # github APIでアサインしちゃう
+      # maxとminの人は若干のランダム要素を入れる
+      warn("レビュアーは#{max}さんと#{min}さんに決まりました")
+    end
+
     private
 
-    def collaborators
-      repo_name = github.pr_json[:base][:repo][:full_name]
-      collaborators = github.api.collaborators(repo_name)
-    end
+      def collaborators
+        repo_name = github.pr_json[:base][:repo][:full_name]
+        github.api.collaborators(repo_name)
+      end
 
-    def update_files
-      git.modified_files + git.created_files + git.deleted_files
-    end
+      def update_files
+        git.modified_files + git.created_files + git.deleted_files
+      end
 
-    def pickup_authors(file)
-      stdout = system("#{git_path} log -n 10 --format='%an' -- #{file}")
-    end
+      def pickup_authors(file)
+        `"#{git_path} log -n 10 --format='%an' -- #{file}"`
+      end
 
   end
 end
