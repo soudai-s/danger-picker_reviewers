@@ -31,5 +31,10 @@ module Danger
       repo_name = github.pr_json[:base][:repo][:full_name]
       collaborators = github.api.collaborators(repo_name)
     end
+
+    def update_files
+      git.modified_files + git.created_files + git.deleted_files
+    end
+
   end
 end
