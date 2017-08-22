@@ -47,7 +47,7 @@ module Danger
 
       # github APIでアサインしちゃう
       # maxとminの人は若干のランダム要素を入れる
-      warn("レビュアーは#{max}さんと#{min}さんに決まりました")
+      message("レビュアーは#{max}さんと#{min}さんに決まりました")
     end
 
     private
